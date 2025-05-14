@@ -19,7 +19,7 @@ jobs:
       id: ansible_debug
       run: |
         # Run the Ansible command and capture the output
-        result=$(ansible localhost, -m debug -a "var='infra_object_storage'" | grep -oP 'infra_object_storage: \K.*')
+        result=$(ansible -i localhost, localhost -m debug -a "var='infra_object_storage'" | grep -oP 'infra_object_storage: \K.*')
         echo "Captured result: $result"  # Display the result
 
     - name: Display Captured Result
