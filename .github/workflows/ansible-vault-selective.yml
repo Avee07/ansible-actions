@@ -19,18 +19,20 @@ jobs:
           prod_secret=$(openssl rand -hex 24)
           dev_access=$(openssl rand -hex 12)
           dev_secret=$(openssl rand -hex 24)
+          prod_api="https://prod.example.com/api"
+          dev_api="https://dev.example.com/api"
 
           # Use printf to avoid YAML errors and implicit key issues
           printf "%s\n" \
             "infra_node_object:" \
             "  prod_db:" \
-            "    api:" \
-            "      access_key: '${prod_access}'" \
-            "      secret_key: '${prod_secret}'" \
+            "    api: '${prod_api}'" \  
+            "    access_key: '${prod_access}'" \
+            "    secret_key: '${prod_secret}'" \
             "  dev_db:" \
-            "    api:" \
-            "      access_key: '${dev_access}'" \
-            "      secret_key: '${dev_secret}'" > infra_secrets.yml
+            "    api:'${dev_api}'" \
+            "    access_key: '${dev_access}'" \
+            "    secret_key: '${dev_secret}'" > infra_secrets.yml
 
       - name: Show generated secrets file (debug only)
         run: cat infra_secrets.yml
