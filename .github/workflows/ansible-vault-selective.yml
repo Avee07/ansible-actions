@@ -26,7 +26,7 @@ jobs:
           printf "%s\n" \
             "infra_node_object:" \
             "  prod_db:" \
-            "    api: '${prod_api}'" \  
+            "    api: '${prod_api}'" \
             "    access_key: '${prod_access}'" \
             "    secret_key: '${prod_secret}'" \
             "  dev_db:" \
