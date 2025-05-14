@@ -21,10 +21,10 @@ jobs:
     - name: Run Ansible Playbook to Capture Access Key
       id: ansible_debug
       run: |
-        # Run the playbook and capture the output of infra_object_storage
-        result=$(ansible-playbook test_playbook.yml | grep -oP 'infra_object_storage: \K.*')
-        echo "access_key=$result" >> $GITHUB_ENV  # Set the access_key as an environment variable
+        # Run the playbook explicitly targeting localhost with -c local
+        result=$(ansible-playbook test_playbook.yml -i localhost, -c local | grep -oP 'infra_object_storage: \K.*')
+        echo "ACCESS_KEY=$result" >> "$GITHUB_OUTPUT"  # Set the access_key as output
 
     - name: Display Access Key
       run: |
-        echo "Access Key: ${{ env.access_key }}"
+        echo "Access Key: ${{ steps.ansible_debug.outputs.ACCESS_KEY }}"
