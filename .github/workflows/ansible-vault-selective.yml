@@ -7,7 +7,7 @@ on:
 
 jobs:
   ansible:
-    runs-on: self-hosted  # Ensure this runs on your self-hosted GitHub runner
+    runs-on: ubuntu-latest  # This uses the GitHub-hosted Ubuntu runner
 
     steps:
     - name: Checkout repository
