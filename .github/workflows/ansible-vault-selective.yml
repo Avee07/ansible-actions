@@ -1,4 +1,4 @@
-name: Test Ansible Command
+name: Run Ansible on GitHub Runner
 
 on:
   push:
@@ -6,22 +6,40 @@ on:
       - main
 
 jobs:
-  ansible:
+  ansible-localhost:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Ansible
-      run: |
-        sudo apt update
-        sudo apt install -y ansible
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Run Ansible Debug Command to Capture Access Key
-      id: ansible_debug
-      run: |
-        # Run the Ansible command and capture the output
-        result=$(ansible -i localhost, localhost -m debug -a "var='infra_object_storage'" | grep -oP 'infra_object_storage: \K.*')
-        echo "Captured result: $result"  # Display the result
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-    - name: Display Captured Result
-      run: |
-        echo "Captured Result: $result"
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Create inventory
+        run: |
+          echo -e "[local]\nlocalhost ansible_connection=local" > inventory
+
+      - name: Run Ansible Ad-Hoc Command on localhost
+        run: |
+          ansible all -i inventory -m ping
+
+      # Optional: Run a playbook
+      - name: Run Ansible Playbook on localhost
+        run: |
+          echo "
+          - hosts: localhost
+            connection: local
+            tasks:
+              - name: Hello from GitHub Actions
+                debug:
+                  msg: 'Ansible is running on GitHub runner'
+          " > playbook.yml
+          ansible-playbook -i inventory playbook.yml
