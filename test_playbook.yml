@@ -1,0 +1,12 @@
+---
+- name: Test Ansible Playbook
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Set a fact for infra_object_storage
+      set_fact:
+        infra_object_storage: "sample_access_key_12345"
+    
+    - name: Debug output
+      debug:
+        var: infra_object_storage

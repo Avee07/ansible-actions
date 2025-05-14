@@ -1,38 +1,30 @@
-name: Generate Infra Secrets File
+name: Capture Ansible Output to Access Key
 
 on:
-  workflow_dispatch:
   push:
+    branches:
+      - main
 
 jobs:
-  generate-secrets:
-    runs-on: ubuntu-latest
+  ansible:
+    runs-on: self-hosted  # Ensure this runs on your self-hosted GitHub runner
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Checkout the code, including any playbooks
 
-      - name: Generate access/secret keys and store in file
-        run: |
-          # Generate random keys
-          prod_access=$(openssl rand -hex 12)
-          prod_secret=$(openssl rand -hex 24)
-          dev_access=$(openssl rand -hex 12)
-          dev_secret=$(openssl rand -hex 24)
-          prod_api="https://prod.example.com/api"
-          dev_api="https://dev.example.com/api"
+    - name: Set up Ansible
+      run: |
+        sudo apt update
+        sudo apt install -y ansible
 
-          # Use printf to avoid YAML errors and implicit key issues
-          printf "%s\n" \
-            "infra_node_object:" \
-            "  prod_db:" \
-            "    api: '${prod_api}'" \
-            "    access_key: '${prod_access}'" \
-            "    secret_key: '${prod_secret}'" \
-            "  dev_db:" \
-            "    api:'${dev_api}'" \
-            "    access_key: '${dev_access}'" \
-            "    secret_key: '${dev_secret}'" > infra_secrets.yml
+    - name: Run Ansible Playbook to Capture Access Key
+      id: ansible_debug
+      run: |
+        # Run the playbook and capture the output of infra_object_storage
+        result=$(ansible-playbook test_playbook.yml | grep -oP 'infra_object_storage: \K.*')
+        echo "access_key=$result" >> $GITHUB_ENV  # Set the access_key as an environment variable
 
-      - name: Show generated secrets file (debug only)
-        run: cat infra_secrets.yml
+    - name: Display Access Key
+      run: |
+        echo "Access Key: ${{ env.access_key }}"
