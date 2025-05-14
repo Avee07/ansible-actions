@@ -1,4 +1,4 @@
-name: Capture Ansible Output to Access Key
+name: Test Ansible Command
 
 on:
   push:
@@ -7,24 +7,21 @@ on:
 
 jobs:
   ansible:
-    runs-on: ubuntu-latest  # This uses the GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2  # Checkout the code, including any playbooks
-
     - name: Set up Ansible
       run: |
         sudo apt update
         sudo apt install -y ansible
 
-    - name: Run Ansible Playbook to Capture Access Key
+    - name: Run Ansible Debug Command to Capture Access Key
       id: ansible_debug
       run: |
-        # Run the playbook explicitly targeting localhost with -c local
-        result=$(ansible-playbook test_playbook.yml -i localhost, -c local | grep -oP 'infra_object_storage: \K.*')
-        echo "ACCESS_KEY=$result" >> "$GITHUB_OUTPUT"  # Set the access_key as output
+        # Run the Ansible command and capture the output
+        result=$(ansible localhost, -m debug -a "var='infra_object_storage'" | grep -oP 'infra_object_storage: \K.*')
+        echo "Captured result: $result"  # Display the result
 
-    - name: Display Access Key
+    - name: Display Captured Result
       run: |
-        echo "Access Key: ${{ steps.ansible_debug.outputs.ACCESS_KEY }}"
+        echo "Captured Result: $result"

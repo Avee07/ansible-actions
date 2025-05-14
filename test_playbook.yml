@@ -1,12 +1,9 @@
 ---
-- name: Test Ansible Playbook
+- name: Test Ansible Debug Command
   hosts: localhost
-  gather_facts: no
+  vars:
+    infra_object_storage: "This is the access key"
   tasks:
-    - name: Set a fact for infra_object_storage
-      set_fact:
-        infra_object_storage: "sample_access_key_12345"
-    
-    - name: Debug output
+    - name: Debug var
       debug:
         var: infra_object_storage
