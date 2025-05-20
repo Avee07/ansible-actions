@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  workflow_dispatch: # Manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code (optional)
+        uses: actions/checkout@v3
+
+      - name: Download artifact from last successful Build workflow
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build.yml
+          name: app-artifact
+          path: ./deployed
+          branch: main
+          event: push
+
+      - name: Show artifact contents
+        run: |
+          echo "Contents of artifact:"
+          cat ./deployed/app.txt
+
+      - name: Deploy application (mock)
+        run: echo "Deploying application to production server..."
