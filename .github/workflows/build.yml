@@ -13,6 +13,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Set a variable dynamically using shell command
+      - name: Set dynamic value
+        run: echo "MY_DYNAMIC_VAR=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+
+      # Step 3: Set a static variable
+      - name: Set static value
+        run: echo "GREETING=HelloWorld" >> $GITHUB_ENV
+
+      # Step 4: Show env variables in shell (for debugging)
+      - name: Echo env variables
+        run: |
+          echo "GREETING is $GREETING"
+          echo "MY_DYNAMIC_VAR is $MY_DYNAMIC_VAR"
+
+      # Step 5: Run Python script with env access
+      - name: Run Python script
+        run: python script.py
+
+      # Step 6: Final log
+      - name: Done
+        run: echo "Workflow finished successfully"
+
       - name: Build application
         run: |
           echo "Building the app..."
