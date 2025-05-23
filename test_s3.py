@@ -23,10 +23,18 @@ s3 = boto3.resource(
     region_name='us-east-1'
 )
 
-# Upload a file (or create a sample one)
-with open("hello.txt", "w") as f:
-    f.write("Hello from GitHub Actions!")
+# Create a dictionary
+data = {
+    "framework": "GitHub Actions",
+    "language": "Python",
+    "file": "hello.txt",
+    "status": "Success",
+    "message": "Hello from GitHub Actions!"
+}
 
-s3.Bucket(bucket_name).upload_file("hello.txt", "hello.txt")
+# Write dictionary content to a file
+with open("hello.txt", "w") as f:
+    for key, value in data.items():
+        f.write(f"{key}: {value}\n")
 
 print(f"✅ Uploaded 'hello.txt' to bucket '{bucket_name}'")
