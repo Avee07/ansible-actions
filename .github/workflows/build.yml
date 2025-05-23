@@ -4,11 +4,7 @@ on:
   push:
     branches:
       - main
-env:
-  S3_ENDPOINT: http://143.244.131.230:9000
-  S3_ACCESS_KEY: minioadmin
-  S3_SECRET_KEY: minioadmin123
-  S3_BUCKET: object-storage
+
 
 jobs:
   build:
@@ -24,13 +20,20 @@ jobs:
 
       # Step 3: Set a static variable
       - name: Set static value
-        run: echo "GREETING=HelloWorld" >> $GITHUB_ENV
+        run: | 
+          echo "GREETING=HelloWorld" >> $GITHUB_ENV
+          echo "S3_ACCESS_KEY: minioadmin" >> $GITHUB_ENV
+          echo "S3_SECRET_KEY: minioadmin123" >> $GITHUB_ENV
+          echo "S3_BUCKET: object-storage" >> $GITHUB_ENV
+          echo "S3_ENDPOINT: http://143.244.131.230:9000" >> $GITHUB_ENV
+
 
       # Step 4: Show env variables in shell (for debugging)
       - name: Echo env variables
         run: |
           echo "GREETING is $GREETING"
           echo "MY_DYNAMIC_VAR is $MY_DYNAMIC_VAR"
+
 
       - name: Install boto3
         run: pip install boto3
