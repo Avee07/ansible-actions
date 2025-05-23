@@ -8,6 +8,7 @@ secret_key = os.environ["S3_SECRET_KEY"]
 bucket_name = os.environ["S3_BUCKET"]
 
 print(f"🔌 Connecting to S3 at {endpoint}")
+print(access_key)
 print("🔑 Access Key: {access_key}")
 print("🔑 Secret Key:   {secret_key}"  )
 print("🗑️ Bucket: {bucket_name}")
