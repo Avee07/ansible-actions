@@ -2,28 +2,13 @@ import boto3
 from botocore.client import Config
 import os
 
-endpoint = os.environ["S3_ENDPOINT"]
-access_key = os.environ["S3_ACCESS_KEY"]
-secret_key = os.environ["S3_SECRET_KEY"]
-bucket_name = os.environ["S3_BUCKET"]
+# --- Environment variables or hardcoded values ---
+endpoint_url = os.getenv("S3_ENDPOINT", "http://localhost:9000")
+access_key = os.getenv("S3_ACCESS_KEY", "minioadmin")
+secret_key = os.getenv("S3_SECRET_KEY", "minioadmin123")
+bucket_name = os.getenv("S3_BUCKET", "object-storage")
 
-print(f"🔌 Connecting to S3 at {endpoint}")
-print(access_key)
-print("🔑 Access Key: {access_key}")
-print("🔑 Secret Key:   {secret_key}"  )
-print("🗑️ Bucket: {bucket_name}")
-
-# Connect to MinIO
-s3 = boto3.resource(
-    's3',
-    endpoint_url=endpoint,
-    aws_access_key_id=access_key,
-    aws_secret_access_key=secret_key,
-    config=Config(signature_version='s3v4'),
-    region_name='us-east-1'
-)
-
-# Create a dictionary
+# --- Step 1: Create dictionary and write to file ---
 data = {
     "framework": "GitHub Actions",
     "language": "Python",
@@ -32,9 +17,24 @@ data = {
     "message": "Hello from GitHub Actions!"
 }
 
-# Write dictionary content to a file
 with open("hello.txt", "w") as f:
     for key, value in data.items():
         f.write(f"{key}: {value}\n")
 
+# --- Step 2: Create S3 client and upload file ---
+s3 = boto3.resource(
+    "s3",
+    endpoint_url=endpoint_url,
+    aws_access_key_id=access_key,
+    aws_secret_access_key=secret_key,
+    config=Config(signature_version="s3v4"),
+    region_name="us-east-1"
+)
+
+s3.Bucket(bucket_name).upload_file("hello.txt", "hello.txt")
 print(f"✅ Uploaded 'hello.txt' to bucket '{bucket_name}'")
+
+# --- Step 3: List all files in the bucket ---
+print("\n📂 Files in bucket:")
+for obj in s3.Bucket(bucket_name).objects.all():
+    print(f"- {obj.key}")
