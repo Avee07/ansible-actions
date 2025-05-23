@@ -22,10 +22,10 @@ jobs:
       - name: Set static value
         run: | 
           echo "GREETING=HelloWorld" >> $GITHUB_ENV
-          echo "S3_ACCESS_KEY: minioadmin" >> $GITHUB_ENV
-          echo "S3_SECRET_KEY: minioadmin123" >> $GITHUB_ENV
-          echo "S3_BUCKET: object-storage" >> $GITHUB_ENV
-          echo "S3_ENDPOINT: http://143.244.131.230:9000" >> $GITHUB_ENV
+          echo "S3_ACCESS_KEY=minioadmin" >> $GITHUB_ENV
+          echo "S3_SECRET_KEY=minioadmin123" >> $GITHUB_ENV
+          echo "S3_BUCKET=object-storage" >> $GITHUB_ENV
+          echo "S3_ENDPOINT=http://143.244.131.230:9000" >> $GITHUB_ENV
 
 
       # Step 4: Show env variables in shell (for debugging)
